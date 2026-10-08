@@ -1,0 +1,26 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "shipitfam",
+  "description": "ShipItFam: an AI dev crew you keep on a leash. Plugins that connect Claude to your ShipItFam projects.",
+  "owner": {
+    "name": "Yanko Ivanov",
+    "url": "https://github.com/yanko-ivanov"
+  },
+  "plugins": [
+    {
+      "name": "shipitfam",
+      "source": "./plugins/shipitfam",
+      "description": "Drive your ShipItFam AI dev crew from Claude: create projects from starters, start missions, answer the crew, review previews and ship, with sign-in through ShipItFam (no tokens to copy).",
+      "version": "1.0.0",
+      "author": {
+        "name": "Yanko Ivanov",
+        "url": "https://github.com/yanko-ivanov"
+      },
+      "homepage": "https://shipitfam.com",
+      "repository": "https://github.com/yanko-ivanov/shipitfam-claude-plugin",
+      "license": "MIT",
+      "keywords": ["shipitfam", "ai-dev-team", "mcp", "missions", "ship"],
+      "category": "development"
+    }
+  ]
+}
