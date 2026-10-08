@@ -1,21 +1,35 @@
 # ShipItFam for Claude
 
-Drive your [ShipItFam](https://shipitfam.com) AI dev crew from Claude. ShipItFam is a human-in-the-loop AI dev team: you describe a goal, a crew of specialist agents plans and builds it, and nothing risky or final happens without your say-so. This plugin lets Claude list your projects, create new ones from a starter, start missions, show you what the crew is waiting on, carry your answers back, open previews and ship.
+Run your [ShipItFam](https://shipitfam.com) AI dev crew from Claude. ShipItFam is a human-in-the-loop AI dev team: you describe a goal, a crew of specialist agents plans and builds it, and nothing risky or final happens without your say-so. This plugin lets Claude do the whole job of running it with you: queue missions, show what the crew is waiting on, carry your approvals and answers back, follow up on finished work, steer a mission that is running, change how much the crew asks you, and open previews.
 
 It works in Claude Code, claude.ai and Cowork.
 
 ## What you get
 
-- **The ShipItFam MCP server** at `https://shipitfam.com/mcp` (projects and project starters, missions, requests, previews, routines, the Treasure map, and more).
-- **A skill** (`shipitfam`) that teaches Claude how to drive ShipItFam well: read the board, relay what the crew needs in plain language, and never decide for you.
-- **Four commands**:
+- **The ShipItFam MCP server** at `https://shipitfam.com/mcp`: 57 tools for the mission loop, projects and starters, routines, the Treasure map (project knowledge), your team and the crew's tools.
+- **A skill** (`shipitfam`) that teaches Claude how to drive it well: read the board, put what the crew needs in plain language, ask before it approves, cancels or ships, and never decide for you.
+- **Five commands**:
 
 | Command | What it does |
 |---|---|
-| `/shipitfam:status` | Where your projects stand: what needs you, what is running, what finished. Read-only. |
-| `/shipitfam:inbox` | Walks you through every request the crew is waiting on, one at a time. |
-| `/shipitfam:new-mission` | Starts a mission from a plain-language goal. |
-| `/shipitfam:ship` | Reviews a finished mission (preview, PR) and ships it, sends it back, or holds it. |
+| `/shipitfam:inbox` | Walks you through every request the crew is waiting on, one at a time: plans, questions, risky commands, step reviews, "Ship it?" and failures. |
+| `/shipitfam:status` | Where your projects stand: what needs you, what is running, what is queued, what finished, and why a queue is stuck. Read-only. |
+| `/shipitfam:new-mission` | Queues a mission from a plain-language goal. |
+| `/shipitfam:follow-up` | Asks for changes on finished work, steers a running step, or leaves the crew a note. |
+| `/shipitfam:settings` | Shows and changes how much the crew asks you: plan approval, risky commands, pauses, keep working. |
+
+### The loop
+
+```
+inbox, request_get, request_answer   what the crew needs from you, read in full, and your answer
+mission_create                       queues a mission (oldest first, one at a time per crew)
+mission_list, mission_get, job_log   watch it (step_diff shows the code a step changed)
+mission_comment                      follow up on finished work, steer a running step, leave a note
+project_settings_set                 plan approval, risky commands, pauses, keep working
+preview_pick                         which mission's preview the crew serves
+```
+
+Claude shows you a plan, a risky command or a "Ship it?" and waits for your yes before it approves, allows or ships. Skipping a step and cancelling a mission need your yes as well. If you tell it up front ("approve the plan for the pricing mission"), that is your yes.
 
 ## Install
 
@@ -54,25 +68,28 @@ Do not add an `Authorization` header to this plugin's MCP config. A static heade
 
 Try:
 
-- "What can I start a ShipItFam project from?"
-- "Create a ShipItFam project called Landing from the blank starter."
-- "What needs me on ShipItFam?"
-- "Start a mission on my landing page project: add a pricing section with three tiers."
-- "Show me the preview for the pricing mission and ship it if it looks right."
+- "What needs me on ShipItFam?" or `/shipitfam:inbox`
+- "Queue a mission on my landing page project: add a pricing section with three tiers."
+- "Show me the plan for the pricing mission. If it looks right, approve it."
+- "How is the pricing mission going? What is the crew doing right now?"
+- "The pricing mission is done. Follow up: make the middle tier the highlighted one."
+- "Stop pausing me on every plan for the landing page project, but keep asking before risky commands."
+- "Show me the preview of the pricing mission."
+- "What can I start a ShipItFam project from?" then "Create one called Landing from the blank starter."
 
-The crew runs on your own Claude login, which you set up in the ShipItFam app. If a step fails with "Claude is not logged in on this project", sign in to Claude in the app and retry from Claude.
+The crew runs on your own Claude login, which you set up in the ShipItFam app. If a step fails with "Claude is not logged in on this project", Claude offers to reuse a login you already have working on another project, or sends you to the app to sign in.
 
 ## What Claude is allowed to do
 
-The server exposes 78 tools, and every one declares `title`, `readOnlyHint`, `destructiveHint` and `openWorldHint`:
+The server exposes 57 tools, and every one declares `title`, `readOnlyHint`, `destructiveHint` and `openWorldHint`:
 
 | Class | Tools | Hints |
 |---|---|---|
-| Read-only | 27 (every list and get, `helm_feed`, `request_list`, `mission_list`, `mission_get`, `project_starter_list`, previews, status and diagnostics) | `readOnlyHint` true |
-| Write | 37 (creates and edits, for example `project_create`, `mission_create`, `project_update`, `project_settings_set`) | `readOnlyHint` false, `destructiveHint` false |
-| Destructive | 14 (every `*_delete`, `session_stop`, `session_cleanup`, `session_force_resume`, `approval_reject`, `project_repo_credential_clear`, `project_invite_revoke`, and `action`) | `destructiveHint` true |
+| Read-only | 21 (every list and get, `inbox`, `request_get`, `mission_list`, `mission_get`, `job_log`, `step_diff`, `project_starter_list`, `routine_run_list`, status and diagnostics) | `readOnlyHint` true |
+| Write | 26 (creates and edits, for example `project_create`, `mission_create`, `mission_comment`, `preview_pick`, `project_settings_set`, `project_wake`) | `readOnlyHint` false, `destructiveHint` false |
+| Destructive | 10 (every `*_delete`, `mission_cancel`, `project_repo_credential_clear`, `project_invite_revoke`, and `request_answer`) | `destructiveHint` true |
 
-`openWorldHint` is true on exactly two tools, because the call itself reaches outside your ShipItFam account: `mcp_server_verify` (calls the URL you registered for an MCP server) and `action` (on a "Ship it?" card it pushes the mission branch to your git remote). It is false on the other 76. `action` is destructive because it is how a mission card is answered, cancelled or shipped.
+`openWorldHint` is true on exactly two tools, because the call itself reaches outside your ShipItFam account: `mcp_server_verify` (calls the URL you registered for an MCP server) and `request_answer` (on a "Ship it?" request it pushes the mission branch to your git remote). It is false on the other 55. `request_answer` is destructive because it is how a request is answered: approving a plan, allowing a command, cancelling a mission and shipping all go through it.
 
 A connected app cannot change your billing or manage your Claude logins: those stay behind your own ShipItFam session, so Claude sends you to the app for them.
 
@@ -91,7 +108,7 @@ plugins/shipitfam/
   .claude-plugin/plugin.json        plugin manifest
   .mcp.json                         the remote MCP server, no static headers
   skills/shipitfam/SKILL.md         how to drive ShipItFam
-  commands/                         the four slash commands
+  commands/                         the five slash commands
   assets/logo.png                   plugin icon
 ```
 

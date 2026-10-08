@@ -1,8 +1,8 @@
 {
   "name": "shipitfam",
   "displayName": "ShipItFam",
-  "description": "Drive your ShipItFam AI dev crew from Claude: create projects from starters, start missions, answer the crew, review previews and ship.",
-  "version": "1.0.0",
+  "description": "Run your ShipItFam AI dev crew from Claude: queue missions, approve plans and answer the crew, follow up, set how much it asks you, and review previews.",
+  "version": "1.1.0",
   "author": {
     "name": "Yanko Ivanov",
     "url": "https://github.com/yanko-ivanov"
