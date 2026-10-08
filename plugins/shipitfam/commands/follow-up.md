@@ -16,6 +16,6 @@ What I want: $ARGUMENTS
    - "Ship it?" is waiting: a comment on a finished step is only kept as a note. Revise the ship request through /shipitfam:inbox so the change lands before it ships.
    - Cancelled: a comment is only a note and does not reopen it. Offer /shipitfam:new-mission.
 4. Call `mission_comment` with `mission_id`, `text` (my words, written as I would say them to the crew) and `step_id` only if my point is about that step.
-5. Relay the server's `message` and say what now happens: the mission is reopened and queued where, the running step restarts, a fix-up step was added, or it stays a note (`note_only`). Claim no more than it says.
+5. Relay the `message` that starts the result and say what now happens: the mission was reopened with these follow-up steps, the running step restarts, a fix-up step was added, or it stays a note and why (`note_only`). A `step_id` that is not one of the mission's steps is refused with the real ids: pick one from the refusal. Claim no more than the `message` says.
 
 Do not wait around for the crew to finish.

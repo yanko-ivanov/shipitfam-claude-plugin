@@ -12,7 +12,7 @@ If that names a project, only handle that project (find its id with `project_lis
 1. Call `inbox` (pass `project_id` when a project was named).
 2. If nothing is waiting, say so in one line, point at /shipitfam:status for what the crew is doing, and stop.
 3. Otherwise go one request at a time, oldest first (`asked_at`). For each one:
-   - Call `request_get` with its `mission_id` so you have the whole request, not the teaser.
+   - Call `request_get` with its `request_id` so you have the whole request, not the teaser.
    - Tell me in plain language what the crew is asking: the plan's steps and critique, or the questions and their choices, or the exact command and why it is needed, or what the step did, or what "Ship it?" will push, or why the step failed. If the result says `redacted: true`, tell me part of it is hidden and that I have to open it in the ShipItFam app.
    - Say which option you would pick and why, then ask me what to do. Offer the request's own options by their labels. Wait for my answer.
    - Do not approve a plan, allow a command, ship, skip or cancel on my behalf, even if it looks obvious, unless I already told you to in this conversation. Do not answer the crew's questions for me.

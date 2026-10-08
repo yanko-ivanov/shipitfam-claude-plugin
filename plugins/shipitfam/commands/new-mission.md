@@ -20,6 +20,6 @@ What I want: $ARGUMENTS
 5. Tell me in three lines or fewer:
    - what was queued, and where: how many missions are ahead of it (they run oldest first, one at a time, and cannot be reordered, only cancelled);
    - what the crew does first, and whether it will stop for me: questions from the spec, and a plan to approve when the project has `approve_plan` on (see /shipitfam:settings and /shipitfam:inbox);
-   - any crew `notice` that `mission_list` still shows, with the tool that fixes it. Offer it and wait for my yes before calling `project_wake` or `project_provision`.
+   - any crew `notice` (the `mission_create` answer carries it with a `message` when the mission will not run yet, and `mission_list` shows it too), with the tool that fixes it. Offer it and wait for my yes before calling `project_wake` or `project_provision`.
 
 Do not wait around for the crew to finish.
