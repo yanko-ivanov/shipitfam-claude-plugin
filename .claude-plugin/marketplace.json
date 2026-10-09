@@ -11,7 +11,7 @@
       "name": "shipitfam",
       "source": "./plugins/shipitfam",
       "description": "Run your ShipItFam AI dev crew from Claude: queue missions, approve plans and answer the crew, follow up, set how much it asks you, and review previews, with sign-in through ShipItFam (no tokens to copy).",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "Yanko Ivanov",
         "url": "https://github.com/yanko-ivanov"
